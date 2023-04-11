@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "88966980004",
+    "project_id": "logisticx-5e833",
+    "storage_bucket": "logisticx-5e833.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:88966980004:android:4d7e4662cea3569b97a131",
+        "android_client_info": {
+          "package_name": "com.example.logisticx_datn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "88966980004-6cp9ovmo84tqpbcmf1cj54ucs1vipjal.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFjmcBBguHNhl33bqmXhvse4DNpSYSrZM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "88966980004-6cp9ovmo84tqpbcmf1cj54ucs1vipjal.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
