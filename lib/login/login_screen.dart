@@ -196,8 +196,8 @@ class LoginScreenState extends State<LoginScreen> {
                               children: <TextSpan>[
                             TextSpan(
                                 recognizer: TapGestureRecognizer()
-                                  ..onTap = () => Navigator.of(context)
-                                      .pushNamed(RegisterPage.routeName),
+                                  ..onTap = () => Navigator.pushNamed(
+                                      context, RegisterPage.routeName),
                                 text: 'Đăng ký',
                                 style: TextStyle(
                                     color: Color(0xff3277D8), fontSize: 16))
