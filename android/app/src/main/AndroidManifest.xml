@@ -4,6 +4,8 @@
         android:label="logisticx_datn"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyBtb5uHWdBOs1vgBL9tJJQH_Lo4MZSC1no"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

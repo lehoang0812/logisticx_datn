@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:logisticx_datn/home/index.dart';
 import 'package:logisticx_datn/login/index.dart';
+
+import '../services/google_map.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -19,7 +22,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  //CreateOrderTab(),    ListOrderTab(),    ManageBankTab(),
   HomeScreenState();
 
   @override
@@ -63,64 +65,7 @@ class HomeScreenState extends State<HomeScreen> {
           ));
         }
         if (currentState is InHomeState) {
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                Wrap(
-                  children: [
-                    RawMaterialButton(
-                      shape: CircleBorder(),
-                      onPressed: () {},
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Column(
-                          children: [Icon(Icons.add), Text("Đặt lịch")],
-                        ),
-                      ),
-                    ),
-                    RawMaterialButton(
-                      shape: CircleBorder(),
-                      onPressed: () {},
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Column(
-                          children: [Icon(Icons.add), Text("Lịch sử")],
-                        ),
-                      ),
-                    ),
-                    RawMaterialButton(
-                      shape: CircleBorder(),
-                      onPressed: () {},
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Column(
-                          children: [Icon(Icons.add), Text("Bảng giá")],
-                        ),
-                      ),
-                    ),
-                    RawMaterialButton(
-                      shape: CircleBorder(),
-                      onPressed: () {},
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Column(
-                          children: [Icon(Icons.add), Text("Ưu đãi")],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 5),
-                  height: 200,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.green[100],
-                  ),
-                ),
-              ],
-            ),
-          );
+          return GoogleMapPage();
         }
         return Center(
           child: CircularProgressIndicator(),

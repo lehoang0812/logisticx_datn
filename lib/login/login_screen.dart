@@ -6,6 +6,7 @@ import 'package:logisticx_datn/register/index.dart';
 
 import '../home/home_page.dart';
 import '../register/register_page.dart';
+import 'forgot_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({
@@ -155,10 +156,20 @@ class LoginScreenState extends State<LoginScreen> {
                       constraints:
                           BoxConstraints.loose(Size(double.infinity, 30)),
                       alignment: AlignmentDirectional.centerEnd,
-                      child: Text(
-                        'Quên mật khẩu?',
-                        style:
-                            TextStyle(fontSize: 16, color: Color(0xff606470)),
+                      child: MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => ForgotPasswordScreen(),
+                              ),
+                            );
+                          },
+                          child: Text('Quên mật khẩu?',
+                              style: TextStyle(
+                                  fontSize: 16, color: Color(0xff3277D8))),
+                        ),
                       ),
                     ),
                     Padding(

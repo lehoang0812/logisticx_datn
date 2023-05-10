@@ -42,8 +42,9 @@ dependencies:
   equatable:
   google_sign_in:
   google_maps_flutter:
-  shimmer:
+  # shimmer:
   location:
+  fluttertoast: ^8.2.1
 
 
 dev_dependencies:
