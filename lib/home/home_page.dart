@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:logisticx_datn/home/index.dart';
 
@@ -74,7 +75,7 @@ class _HomePageState extends State<HomePage> {
               title: Text('Đăng xuất'),
               leading: Icon(Icons.logout),
               onTap: () {
-                //handle Drawer item 5 click
+                FirebaseAuth.instance.signOut();
               },
             ),
           ],
