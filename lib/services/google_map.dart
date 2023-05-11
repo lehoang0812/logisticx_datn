@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class GoogleMapPage extends StatefulWidget {
@@ -40,26 +42,68 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
       ),
       body: Stack(
         children: <Widget>[
-          _buildGoogleMap(context),
+          FutureBuilder<Widget>(
+            future: _buildGoogleMap(context),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return snapshot.data!;
+              } else if (snapshot.hasError) {
+                return Text("Lỗi là : ${snapshot.error}");
+              }
+              return CircularProgressIndicator();
+            },
+          ),
           _zoomMinusFunction(),
         ],
       ),
     );
   }
 
-  Widget _buildGoogleMap(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      child: GoogleMap(
-        mapType: _currentMapType,
-        initialCameraPosition:
-            CameraPosition(target: LatLng(38.9573415, 35.240741), zoom: 12),
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-        markers: {marker1},
-      ),
+  Future<Widget> _buildGoogleMap(BuildContext context) async {
+    bool serviceEnabled;
+    LocationPermission permission;
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error(
+          'Dịch vụ truy cập vị trí đã bị hủy. Vui lòng bật Vị trí');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Quyền truy cập vị trí bị từ chối !');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Quyền truy cập vị trí đã bị từ chối vĩnh viễn, bạn phải vào cài đặt để cấp quyền.');
+    }
+    return FutureBuilder<Position>(
+      future: Geolocator.getCurrentPosition(),
+      builder: (BuildContext context, AsyncSnapshot<Position> snapshot) {
+        if (snapshot.hasData) {
+          Position currentPosition = snapshot.data!;
+          LatLng latLng =
+              LatLng(currentPosition.latitude, currentPosition.longitude);
+          return Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: GoogleMap(
+              mapType: _currentMapType,
+              initialCameraPosition: CameraPosition(target: latLng, zoom: 12),
+              onMapCreated: (GoogleMapController controller) {
+                _controller.complete(controller);
+              },
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
     );
   }
 
@@ -88,8 +132,8 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                         ),
                       ),
                       child: IconButton(
-                          icon: Icon(
-                            Icons.minimize_rounded,
+                          icon: FaIcon(
+                            FontAwesomeIcons.minus,
                             color: Colors.white,
                             size: 20,
                           ),
@@ -112,8 +156,8 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                         ),
                       ),
                       child: IconButton(
-                          icon: Icon(
-                            Icons.plus_one,
+                          icon: FaIcon(
+                            FontAwesomeIcons.plus,
                             color: Colors.white,
                             size: 20,
                           ),
@@ -136,8 +180,8 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                         ),
                       ),
                       child: IconButton(
-                          icon: Icon(
-                            Icons.map,
+                          icon: FaIcon(
+                            FontAwesomeIcons.map,
                             color: Colors.white,
                             size: 20,
                           ),
@@ -172,11 +216,11 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
         CameraPosition(target: LatLng(38.9573415, 35.240741), zoom: zoomVal)));
   }
 
-  Marker marker1 = Marker(
-      markerId: MarkerId('gramercy'),
-      position: LatLng(38.9573415, 35.240741),
-      infoWindow: InfoWindow(title: 'Gramercy Tavern'),
-      icon: BitmapDescriptor.defaultMarkerWithHue(
-        BitmapDescriptor.hueRed,
-      ));
+  // Marker marker1 = Marker(
+  //     markerId: MarkerId('gramercy'),
+  //     position: LatLng(38.9573415, 35.240741),
+  //     infoWindow: InfoWindow(title: 'Gramercy Tavern'),
+  //     icon: BitmapDescriptor.defaultMarkerWithHue(
+  //       BitmapDescriptor.hueRed,
+  //     ));
 }

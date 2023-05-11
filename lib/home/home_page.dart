@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:logisticx_datn/home/index.dart';
+import 'package:logisticx_datn/login/index.dart';
 
 class HomePage extends StatefulWidget {
   static const String routeName = '/home';
@@ -45,21 +47,21 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               title: Text('Tạo đơn hàng mới'),
-              leading: Icon(Icons.add),
+              leading: FaIcon(FontAwesomeIcons.cartPlus),
               onTap: () {
                 //handle Drawer item 1 click
               },
             ),
             ListTile(
               title: Text('Thông tin đơn hàng'),
-              leading: Icon(Icons.delivery_dining),
+              leading: FaIcon(FontAwesomeIcons.cartShopping),
               onTap: () {
                 //handle Drawer item 2 click
               },
             ),
             ListTile(
               title: Text('Quản lý ngân hàng'),
-              leading: Icon(Icons.food_bank),
+              leading: FaIcon(FontAwesomeIcons.moneyCheckDollar),
               onTap: () {
                 //handle Drawer item 3 click
               },
@@ -76,6 +78,11 @@ class _HomePageState extends State<HomePage> {
               leading: Icon(Icons.logout),
               onTap: () {
                 FirebaseAuth.instance.signOut();
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => LoginPage(),
+                  ),
+                );
               },
             ),
           ],
