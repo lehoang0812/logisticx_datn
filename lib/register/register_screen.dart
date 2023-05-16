@@ -22,11 +22,17 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class RegisterScreenState extends State<RegisterScreen> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  bool _showPassword = true;
   RegisterScreenState();
 
   @override
   void initState() {
     super.initState();
+    emailController.text = emailController.text;
+    passwordController.text = passwordController.text;
+    _showPassword = _showPassword;
     _load();
   }
 
@@ -37,11 +43,8 @@ class RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController emailController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
     final _roleList = ["Admin", "Người dùng", "Tài xế"];
     String _selectedRole = _roleList[1];
-    bool isPasswordObscure = true;
     return BlocConsumer<RegisterBloc, RegisterState>(
         bloc: widget._registerBloc,
         listener: (context, state) {
@@ -122,26 +125,32 @@ class RegisterScreenState extends State<RegisterScreen> {
                     TextField(
                       style: TextStyle(fontSize: 18, color: Colors.black),
                       controller: passwordController,
-                      obscureText: isPasswordObscure,
+                      obscureText: _showPassword,
                       decoration: InputDecoration(
-                          labelText: 'Mật khẩu',
-                          prefixIcon: Container(
-                            width: 50,
-                            child: Image(
-                                image: AssetImage('./assets/ic_lock.png')),
+                        labelText: 'Mật khẩu',
+                        prefixIcon: Container(
+                          width: 50,
+                          child:
+                              Image(image: AssetImage('./assets/ic_lock.png')),
+                        ),
+                        suffixIcon: InkWell(
+                          onTap: () {
+                            setState(() {
+                              _showPassword = !_showPassword;
+                            });
+                            // print('hello');
+                          },
+                          child: Icon(
+                            _showPassword
+                                ? Icons.visibility
+                                : Icons.visibility_off,
                           ),
-                          suffixIcon: IconButton(
-                              icon: Icon(Icons.remove_red_eye),
-                              onPressed: () {
-                                setState(() {
-                                  isPasswordObscure = !isPasswordObscure;
-                                });
-                              }),
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Color(0xffCED0D2), width: 1),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(6)))),
+                        ),
+                        border: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Color(0xffCED0D2), width: 1),
+                            borderRadius: BorderRadius.all(Radius.circular(6))),
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 30, 0, 40),
