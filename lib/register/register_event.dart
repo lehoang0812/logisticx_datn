@@ -24,7 +24,7 @@ class LoadRegisterEvent extends RegisterEvent {
   Stream<RegisterState> applyAsync(
       {RegisterState? currentState, RegisterBloc? bloc}) async* {
     try {
-      yield UnRegisterState();
+      yield InRegisterState();
     } catch (_, stackTrace) {
       developer.log('$_',
           name: 'LoadRegisterEvent', error: _, stackTrace: stackTrace);

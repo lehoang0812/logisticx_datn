@@ -148,31 +148,25 @@ class RegisterScreenState extends State<RegisterScreen> {
                       child: SizedBox(
                         width: double.infinity,
                         height: 52,
-                        child: DropdownButtonFormField(
+                        child: DropdownButtonFormField<String>(
                           value: _selectedRole,
-                          items: _roleList.map((e) {
-                            return DropdownMenuItem(
-                              child: Text(e),
-                              value: e,
-                            );
-                          }).toList(),
-                          onChanged: (val) {
+                          decoration: InputDecoration(
+                            labelText: 'Chọn vị trí của bạn',
+                          ),
+                          isExpanded: true,
+                          onChanged: (value) {
                             setState(() {
-                              _selectedRole = val as String;
+                              _selectedRole = value as String;
                             });
                           },
-                          icon: const Icon(
-                            Icons.arrow_drop_down,
-                            color: Colors.blue,
-                          ),
-                          dropdownColor: Colors.blue.shade50,
-                          decoration: InputDecoration(
-                              labelText: "Chọn vị trí bạn muốn",
-                              prefixIcon: Icon(
-                                Icons.accessibility_new_rounded,
-                                color: Colors.blueGrey,
-                              ),
-                              border: UnderlineInputBorder()),
+                          items: _roleList
+                              .map<DropdownMenuItem<String>>(
+                                (String value) => DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                ),
+                              )
+                              .toList(),
                         ),
                       ),
                     ),
@@ -189,7 +183,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                                 _selectedRole));
                           },
                           child: Text(
-                            'Đăng nhập',
+                            'Đăng ký',
                             style: TextStyle(fontSize: 18, color: Colors.white),
                           ),
                           style: ButtonStyle(
