@@ -6,7 +6,8 @@ import 'package:logisticx_datn/register/index.dart';
 
 import '../home/home_page.dart';
 import '../register/register_page.dart';
-import 'forgot_password_screen.dart';
+import '../screens/forgot_password_screen.dart';
+import '../screens/register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({
@@ -207,8 +208,10 @@ class LoginScreenState extends State<LoginScreen> {
                               children: <TextSpan>[
                             TextSpan(
                                 recognizer: TapGestureRecognizer()
-                                  ..onTap = () => Navigator.pushNamed(
-                                      context, RegisterPage.routeName),
+                                  ..onTap = () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (c) => RegisterScreen2())),
                                 text: 'Đăng ký',
                                 style: TextStyle(
                                     color: Color(0xff3277D8), fontSize: 16))

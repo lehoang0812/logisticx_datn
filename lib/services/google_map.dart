@@ -44,7 +44,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
         await places.searchNearbyWithRadius(
       location,
       1500, // radius in meters
-      type: 'store', // specify the type of place you want to search
+      // type: 'store', // specify the type of place you want to search
     );
     setState(() {
       _places = response.results;

@@ -39,11 +39,16 @@ dependencies:
   flutter_bloc:
   firebase_core:
   firebase_auth:
+  firebase_database:
+  firebase_storage:
+  firebase_messaging:
   equatable:
   google_sign_in:
   google_maps_flutter:
   # shimmer:
   # geolocator: ^9.0.2
+  email_validator: ^2.1.17
+  intl_phone_field: ^3.1.0
   fluttertoast: ^8.2.1
   font_awesome_flutter: ^10.4.0
   url_launcher: ^6.1.11

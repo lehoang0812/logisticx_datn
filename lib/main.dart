@@ -14,6 +14,7 @@ import 'register/register_state.dart';
 
 Future main() async {
   runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
