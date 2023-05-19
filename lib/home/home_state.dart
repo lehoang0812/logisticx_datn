@@ -1,34 +1,34 @@
-import 'package:equatable/equatable.dart';
+// import 'package:equatable/equatable.dart';
 
-abstract class HomeState extends Equatable {
-  HomeState();
+// abstract class HomeState extends Equatable {
+//   HomeState();
 
-  @override
-  List<Object> get props => [];
-}
+//   @override
+//   List<Object> get props => [];
+// }
 
-/// UnInitialized
-class UnHomeState extends HomeState {
-  UnHomeState();
+// /// UnInitialized
+// class UnHomeState extends HomeState {
+//   UnHomeState();
 
-  @override
-  String toString() => 'UnHomeState';
-}
+//   @override
+//   String toString() => 'UnHomeState';
+// }
 
-/// Initialized
-class InHomeState extends HomeState {
-  @override
-  List<Object> get props => [];
-}
+// /// Initialized
+// class InHomeState extends HomeState {
+//   @override
+//   List<Object> get props => [];
+// }
 
-class ErrorHomeState extends HomeState {
-  ErrorHomeState(this.errorMessage);
+// class ErrorHomeState extends HomeState {
+//   ErrorHomeState(this.errorMessage);
 
-  final String errorMessage;
+//   final String errorMessage;
 
-  @override
-  String toString() => 'ErrorHomeState';
+//   @override
+//   String toString() => 'ErrorHomeState';
 
-  @override
-  List<Object> get props => [errorMessage];
-}
+//   @override
+//   List<Object> get props => [errorMessage];
+// }
