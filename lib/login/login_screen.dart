@@ -2,10 +2,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logisticx_datn/login/index.dart';
-import 'package:logisticx_datn/register/index.dart';
 
 import '../home/home_page.dart';
-import '../register/register_page.dart';
 import '../screens/forgot_password_screen.dart';
 import '../screens/register_screen.dart';
 
