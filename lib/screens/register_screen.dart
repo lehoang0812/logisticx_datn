@@ -6,18 +6,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logisticx_datn/global/global.dart';
+import 'package:logisticx_datn/screens/login_screen.dart';
 import 'package:logisticx_datn/screens/user_home_screen.dart';
 
 import '../login/login_page.dart';
 
-class RegisterScreen2 extends StatefulWidget {
-  const RegisterScreen2({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<RegisterScreen2> createState() => _RegisterScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen2> {
+class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController addressController = TextEditingController();
@@ -418,8 +419,10 @@ class _RegisterScreenState extends State<RegisterScreen2> {
                           children: <TextSpan>[
                         TextSpan(
                             recognizer: TapGestureRecognizer()
-                              ..onTap = () => Navigator.of(context)
-                                  .pushNamed(LoginPage.routeName),
+                              ..onTap = () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (c) => LoginScreen())),
                             text: 'Đăng nhập',
                             style: TextStyle(
                                 color: Color(0xff3277D8), fontSize: 16))

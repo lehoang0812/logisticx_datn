@@ -1,29 +1,23 @@
-import 'package:equatable/equatable.dart';
+import 'package:firebase_database/firebase_database.dart';
 
-class User extends Equatable {
-  const User({
-    required this.id,
-    this.email,
-    this.name,
-    this.photo,
-    this.role,
-  });
-  final String? email;
+class UserModel {
+  String? phone;
 
-  final String id;
+  String? name;
 
-  final String? name;
+  String? id;
 
-  final String? photo;
+  String? email;
 
-  final String? role;
+  String? address;
 
-  static const empty = User(id: '');
+  UserModel({this.name, this.phone, this.email, this.id, this.address});
 
-  bool get isEmpty => this == User.empty;
-
-  bool get isNotEmpty => this != User.empty;
-
-  @override
-  List<Object?> get props => [email, id, name, photo];
+  UserModel.fromSnapshot(DataSnapshot snap) {
+    phone = (snap.value as dynamic)["phone"];
+    name = (snap.value as dynamic)["name"];
+    id = snap.key;
+    email = (snap.value as dynamic)["email"];
+    address = (snap.value as dynamic)["address"];
+  }
 }
