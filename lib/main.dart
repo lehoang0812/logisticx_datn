@@ -8,9 +8,6 @@ import 'home/home_state.dart';
 import 'login/login_bloc.dart';
 import 'login/login_page.dart';
 import 'login/login_state.dart';
-import 'register/register_bloc.dart';
-import 'register/register_page.dart';
-import 'register/register_state.dart';
 
 Future main() async {
   runApp(const MyApp());
@@ -29,9 +26,6 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<LoginBloc>(create: (context) => LoginBloc(InLoginState())),
         BlocProvider<HomeBloc>(create: (context) => HomeBloc(InHomeState())),
-        BlocProvider<RegisterBloc>(
-          create: (context) => RegisterBloc(InRegisterState()),
-        )
       ],
       child: BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
         return MaterialApp(
@@ -54,10 +48,6 @@ Route onGenerateRoute(RouteSettings settings) {
     case HomePage.routeName:
       return MaterialPageRoute(
         builder: (context) => HomePage(),
-      );
-    case RegisterPage.routeName:
-      return MaterialPageRoute(
-        builder: (context) => RegisterPage(),
       );
     default:
       return MaterialPageRoute(
