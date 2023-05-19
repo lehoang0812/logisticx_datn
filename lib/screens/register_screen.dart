@@ -1,10 +1,10 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:logisticx_datn/global/global.dart';
 import 'package:logisticx_datn/screens/user_home_screen.dart';
 
@@ -31,32 +31,54 @@ class _RegisterScreenState extends State<RegisterScreen2> {
 
   void _register() async {
     if (_formKey.currentState!.validate()) {
-      await firebaseAuth
-          .createUserWithEmailAndPassword(
-              email: emailController.text.trim(),
-              password: passwordController.text.trim())
-          .then((auth) async {
-        currentUser = auth.user;
+      try {
+        await firebaseAuth
+            .createUserWithEmailAndPassword(
+                email: emailController.text.trim(),
+                password: passwordController.text.trim())
+            .then((auth) async {
+          currentUser = auth.user;
 
-        if (currentUser != null) {
-          Map userMap = {
-            "id": currentUser!.uid,
-            "name": nameController.text.trim(),
-            "email": emailController.text.trim(),
-            "address": addressController.text.trim(),
-            "phone": phoneController.text.trim(),
-            "role": _selectedRole.trim(),
-          };
-          DatabaseReference userRef =
-              FirebaseDatabase.instance.ref().child("users");
-          userRef.child(currentUser!.uid).set(userMap);
+          if (currentUser != null) {
+            Map userMap = {
+              "id": currentUser!.uid,
+              "name": nameController.text.trim(),
+              "email": emailController.text.trim(),
+              "address": addressController.text.trim(),
+              "phone": phoneController.text.trim(),
+              "role": _selectedRole.trim(),
+            };
+            DatabaseReference userRef =
+                FirebaseDatabase.instance.ref().child("users");
+            userRef.child(currentUser!.uid).set(userMap);
+          }
+          await Fluttertoast.showToast(msg: "Đăng ký thành công");
+          Navigator.push(
+              context, MaterialPageRoute(builder: (c) => UserHomeScreen()));
+        });
+      } catch (error) {
+        if (error is FirebaseAuthException) {
+          switch (error.code) {
+            case 'invalid-email':
+              Fluttertoast.showToast(
+                msg: 'Lỗi, email không hợp lệ!',
+                gravity: ToastGravity.BOTTOM,
+              );
+              break;
+            case 'email-already-in-use':
+              Fluttertoast.showToast(
+                msg: 'Lỗi, email đã tồn tại!',
+                gravity: ToastGravity.BOTTOM,
+              );
+              break;
+            default:
+              Fluttertoast.showToast(
+                msg: 'Lỗi không xác định: ${error.toString()}',
+                gravity: ToastGravity.BOTTOM,
+              );
+          }
         }
-        await Fluttertoast.showToast(msg: "Đăng ký thành công");
-        Navigator.push(
-            context, MaterialPageRoute(builder: (c) => UserHomeScreen()));
-      }).catchError((e) {
-        Fluttertoast.showToast(msg: "Lỗi xuất hiện: $e");
-      });
+      }
     } else {
       Fluttertoast.showToast(msg: "Vui lòng nhập đầy đủ các trường");
     }
@@ -254,34 +276,37 @@ class _RegisterScreenState extends State<RegisterScreen2> {
                     // }),
                   ),
                 ),
-                TextFormField(
-                  style: TextStyle(fontSize: 18, color: Colors.black),
-                  controller: confirmPassController,
-                  obscureText: _showPassword,
-                  decoration: InputDecoration(
-                    labelText: 'Nhập lại mật khẩu',
-                    prefixIcon: Container(
-                      width: 50,
-                      child: Image(image: AssetImage('./assets/ic_lock.png')),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                  child: TextFormField(
+                    style: TextStyle(fontSize: 18, color: Colors.black),
+                    controller: confirmPassController,
+                    obscureText: _showPassword,
+                    decoration: InputDecoration(
+                      labelText: 'Nhập lại mật khẩu',
+                      prefixIcon: Container(
+                        width: 50,
+                        child: Image(image: AssetImage('./assets/ic_lock.png')),
+                      ),
+                      border: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Color(0xffCED0D2), width: 1),
+                          borderRadius: BorderRadius.all(Radius.circular(6))),
                     ),
-                    border: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Color(0xffCED0D2), width: 1),
-                        borderRadius: BorderRadius.all(Radius.circular(6))),
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (text) {
+                      if (text == null || text.isEmpty) {
+                        return "Mật khẩu nhập lại không được để trống";
+                      }
+                      if (text != passwordController.text) {
+                        return "Mật khẩu không khớp";
+                      }
+                      return null;
+                    },
+                    // onChanged: (text) => setState(() {
+                    //   confirmPassController.text = text;
+                    // }),
                   ),
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: (text) {
-                    if (text == null || text.isEmpty) {
-                      return "Mật khẩu nhập lại không được để trống";
-                    }
-                    if (text != passwordController.text) {
-                      return "Mật khẩu không khớp";
-                    }
-                    return null;
-                  },
-                  // onChanged: (text) => setState(() {
-                  //   confirmPassController.text = text;
-                  // }),
                 ),
                 // Padding(
                 //   padding: EdgeInsets.fromLTRB(0, 20, 0, 0),

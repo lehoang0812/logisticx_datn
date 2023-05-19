@@ -18,7 +18,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         child: Column(
           children: <Widget>[
             SizedBox(
-              height: 500,
+              height: 50,
             ),
             Image(image: AssetImage('./assets/ic_logo.png'), fit: BoxFit.cover),
             SizedBox(
