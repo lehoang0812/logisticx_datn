@@ -17,7 +17,7 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
   findPlaceAutoCompleteSearch(String inputText) async {
     if (inputText.length > 1) {
       String urlAutoCompleteSearch =
-          "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$inputText&key=$mapKey&components=country:VI";
+          "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$inputText&key=$mapKey&components=country:VN";
       var responseAutoCompleteSearch =
           await RequestAssistant.receiveRequest(urlAutoCompleteSearch);
 
@@ -45,21 +45,21 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.amber.shade400,
+          backgroundColor: Colors.blue.shade400,
           leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);
             },
             child: Icon(
               Icons.arrow_back,
-              color: Colors.black,
+              color: Colors.white,
             ),
           ),
           title: Text(
-            "Tìm kiếm và chọn nơi chuyển hàng",
-            style: TextStyle(color: Colors.black),
+            "Tìm kiếm nơi chuyển hàng",
+            style: TextStyle(color: Colors.white),
           ),
           elevation: 0.0,
         ),
@@ -67,7 +67,7 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: Colors.amber.shade400,
+                color: Colors.blue.shade400,
                 boxShadow: [
                   BoxShadow(
                       color: Colors.white54,
@@ -87,7 +87,7 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
                       children: [
                         Icon(
                           Icons.adjust_sharp,
-                          color: Colors.black,
+                          color: Colors.white,
                         ),
                         SizedBox(
                           height: 18.0,
@@ -101,7 +101,7 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
                             },
                             decoration: InputDecoration(
                                 hintText: "Tìm vị trí ở đây",
-                                fillColor: Colors.black,
+                                fillColor: Colors.white,
                                 filled: true,
                                 border: InputBorder.none,
                                 contentPadding: EdgeInsets.only(
@@ -132,7 +132,7 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
                       separatorBuilder: (BuildContext context, int index) {
                         return Divider(
                           height: 0,
-                          color: Colors.amber.shade400,
+                          color: Colors.white,
                           thickness: 0,
                         );
                       },

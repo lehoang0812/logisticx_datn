@@ -45,7 +45,9 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Text(
         "LogisticX",
         style: TextStyle(
-            fontWeight: FontWeight.bold, fontSize: 40, color: Colors.amber),
+            fontWeight: FontWeight.bold,
+            fontSize: 40,
+            color: Colors.blue.shade400),
       )),
     );
   }
