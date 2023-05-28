@@ -69,7 +69,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '88966980004',
     projectId: 'logisticx-5e833',
     storageBucket: 'logisticx-5e833.appspot.com',
-    iosClientId: '88966980004-np4ukol02s567b7lelt79nsu6l45rt2c.apps.googleusercontent.com',
+    iosClientId:
+        '88966980004-np4ukol02s567b7lelt79nsu6l45rt2c.apps.googleusercontent.com',
     iosBundleId: 'com.example.logisticxDatn',
   );
 }

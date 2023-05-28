@@ -9,8 +9,6 @@ import 'package:logisticx_datn/global/global.dart';
 import 'package:logisticx_datn/screens/login_screen.dart';
 import 'package:logisticx_datn/screens/user_home_screen.dart';
 
-import '../login/login_page.dart';
-
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
