@@ -9,7 +9,6 @@ import 'package:logisticx_datn/global/global.dart';
 import 'package:logisticx_datn/screens/register_screen.dart';
 import 'package:logisticx_datn/screens/user_home_screen.dart';
 
-import '../login/login_page.dart';
 import 'forgot_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -100,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: TextStyle(fontSize: 20, color: Color(0xff606470)),
                 ),
                 Padding(
-                  padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                  padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
                   child: TextFormField(
                     inputFormatters: [LengthLimitingTextInputFormatter(50)],
                     style: TextStyle(fontSize: 18, color: Colors.black),
