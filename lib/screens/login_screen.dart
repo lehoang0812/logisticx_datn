@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logisticx_datn/global/global.dart';
 import 'package:logisticx_datn/screens/register_screen.dart';
 import 'package:logisticx_datn/screens/user_home_screen.dart';
+import 'package:logisticx_datn/splashScreen/splash_screen.dart';
 
 import 'forgot_password_screen.dart';
 
@@ -33,10 +34,25 @@ class _LoginScreenState extends State<LoginScreen> {
                 email: emailController.text.trim(),
                 password: passwordController.text.trim())
             .then((auth) async {
-          currentUser = auth.user;
-          await Fluttertoast.showToast(msg: "Đăng nhập thành công");
-          Navigator.push(
-              context, MaterialPageRoute(builder: (c) => UserHomeScreen()));
+          DatabaseReference userRef =
+              FirebaseDatabase.instance.ref().child("users");
+          userRef
+              .child(firebaseAuth.currentUser!.uid)
+              .once()
+              .then((value) async {
+            final snap = value.snapshot;
+            if (snap.value != null) {
+              currentUser = auth.user;
+              await Fluttertoast.showToast(msg: "Đăng nhập thành công");
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (c) => UserHomeScreen()));
+            } else {
+              await Fluttertoast.showToast(msg: "Không tìm thấy tài khoản");
+              firebaseAuth.signOut();
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (c) => SplashScreen()));
+            }
+          });
         });
       } catch (error) {
         if (error is FirebaseAuthException) {
