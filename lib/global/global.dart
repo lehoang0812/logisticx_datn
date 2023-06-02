@@ -8,5 +8,12 @@ User? currentUser;
 
 UserModel? userModelCurrentInfo;
 
+List driversList = [];
 DirectionDetailsInfo? tripDirectionDetailsInfo;
 String userDropOffAddress = "";
+String driverCarDetails = "";
+String driverName = "";
+String driverPhong = "";
+
+double countRatingStars = 0.0;
+String titleStarsRating = "";
