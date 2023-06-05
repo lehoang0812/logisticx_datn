@@ -8,6 +8,7 @@ User? currentUser;
 
 UserModel? userModelCurrentInfo;
 
+String cloudMessagingServerToken = "key=";
 List driversList = [];
 DirectionDetailsInfo? tripDirectionDetailsInfo;
 String userDropOffAddress = "";
