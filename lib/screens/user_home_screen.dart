@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:html';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +22,7 @@ import 'package:logisticx_datn/widgets/progress_dialog.dart';
 import 'package:provider/provider.dart';
 
 import '../models/directions.dart';
+import '../widgets/pay_fare_amount_dialog.dart';
 import 'drawer_screen.dart';
 
 class UserHomeScreen extends StatefulWidget {
@@ -482,7 +482,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                       fareAmount: fareAmount,
                     ));
 
-            if (response == "Cash Paid") {
+            if (response == "Đã trả tiền") {
               //nguoi dung co the danh gia tai xe
               if ((eventSnap.snapshot.value as Map)["driverId"] != null) {
                 String assignedDriverId =
@@ -1149,7 +1149,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                           ),
                           child: Center(
                             child: Text(
-                              "Chọn phương tiện",
+                              "Tạo đơn mới",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -1160,6 +1160,88 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                         ),
                       ),
                     ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          //Tạo đơn mới
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: searchingForDriverContainerHeight,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(15),
+                  topRight: Radius.circular(15),
+                ),
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    LinearProgressIndicator(
+                      color: Colors.blue,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Center(
+                      child: Text(
+                        "Đang tìm tài xế...",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        referenceRideRequest!.remove();
+                        setState(() {
+                          searchLocationContainerHeight = 0;
+                          suggestedRidesContainerHeight = 0;
+                        });
+                      },
+                      child: Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(25),
+                          border: Border.all(width: 1, color: Colors.grey),
+                        ),
+                        child: Icon(
+                          Icons.close,
+                          size: 25,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Container(
+                      width: double.infinity,
+                      child: Text(
+                        "Hủy tìm kiếm",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),
