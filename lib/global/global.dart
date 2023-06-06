@@ -14,7 +14,8 @@ DirectionDetailsInfo? tripDirectionDetailsInfo;
 String userDropOffAddress = "";
 String driverCarDetails = "";
 String driverName = "";
-String driverPhong = "";
+String driverPhone = "";
+String driverRatings = "";
 
 double countRatingStars = 0.0;
 String titleStarsRating = "";
