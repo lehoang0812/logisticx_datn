@@ -16,14 +16,24 @@ import 'package:logisticx_datn/global/map_key.dart';
 import 'package:logisticx_datn/infoHandler/app_info.dart';
 import 'package:logisticx_datn/models/active_nearby_available_drivers.dart';
 import 'package:logisticx_datn/screens/precise_pickup_location.dart';
+import 'package:logisticx_datn/screens/rate_driver_screen.dart';
 import 'package:logisticx_datn/screens/search_places_screen.dart';
 import 'package:logisticx_datn/splashScreen/splash_screen.dart';
 import 'package:logisticx_datn/widgets/progress_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../models/directions.dart';
 import '../widgets/pay_fare_amount_dialog.dart';
 import 'drawer_screen.dart';
+
+Future<void> _makePhoneCall(String url) async {
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw "Could not launch $url";
+  }
+}
 
 class UserHomeScreen extends StatefulWidget {
   const UserHomeScreen({super.key});
@@ -198,8 +208,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     if (activeNearbyIcon == null) {
       ImageConfiguration imageConfiguration =
           createLocalImageConfiguration(context, size: Size(2, 2));
-      BitmapDescriptor.fromAssetImage(
-              imageConfiguration, "./assets/ic_car_green.png")
+      BitmapDescriptor.fromAssetImage(imageConfiguration, "./assets/car.png")
           .then((value) {
         activeNearbyIcon = value;
       });
@@ -291,7 +300,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       infoWindow:
           InfoWindow(title: originPosition.locationName, snippet: "Origin"),
       position: originLatLng,
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
     );
 
     Marker destinationMarker = Marker(
@@ -424,15 +433,22 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 
       if ((eventSnap.snapshot.value as Map)["driverPhone"] != null) {
         setState(() {
-          driverCarDetails =
+          driverPhone =
               (eventSnap.snapshot.value as Map)["driverPhone"].toString();
         });
       }
 
       if ((eventSnap.snapshot.value as Map)["driverName"] != null) {
         setState(() {
-          driverCarDetails =
+          driverName =
               (eventSnap.snapshot.value as Map)["driverName"].toString();
+        });
+      }
+
+      if ((eventSnap.snapshot.value as Map)["ratings"] != null) {
+        setState(() {
+          driverRatings =
+              (eventSnap.snapshot.value as Map)["ratings"].toString();
         });
       }
 
@@ -487,8 +503,12 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
               if ((eventSnap.snapshot.value as Map)["driverId"] != null) {
                 String assignedDriverId =
                     (eventSnap.snapshot.value as Map)["driverId"].toString();
-                // Navigator.push(context,
-                //     MaterialPageRoute(builder: (c) => RateDriverScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (c) => RateDriverScreen(
+                              assignedDriverId: assignedDriverId,
+                            )));
 
                 referenceRideRequest!.onDisconnect();
                 tripRidesRequestInfoStreamSubscription!.cancel();
@@ -997,7 +1017,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                               child: Column(
                                 children: [
                                   Image.asset(
-                                    "./assets/ic_car_green.png",
+                                    "./assets/ic_bike.png",
                                     scale: 2,
                                   ),
                                   SizedBox(
@@ -1046,7 +1066,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                               child: Column(
                                 children: [
                                   Image.asset(
-                                    "./assets/ic_car_green.png",
+                                    "./assets/ic_car.png",
                                     scale: 2,
                                   ),
                                   SizedBox(
@@ -1095,7 +1115,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                               child: Column(
                                 children: [
                                   Image.asset(
-                                    "./assets/ic_car_green.png",
+                                    "./assets/ic_truck.png",
                                     scale: 2,
                                   ),
                                   SizedBox(
@@ -1242,6 +1262,127 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                         ),
                       ),
                     )
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          //ui hien thi tai xe nhan don hang`
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: assignedDriverInfoContainerHeight,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    Text(
+                      driverRideStatus,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Divider(
+                      thickness: 1,
+                      color: Colors.grey[300],
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.lightBlue,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Icon(
+                                Icons.person,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  driverName,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.orange,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      "5.0",
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Image.asset(
+                                      "./assets/car.png",
+                                      scale: 3,
+                                    ),
+                                    Text(
+                                      driverCarDetails,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Divider(
+                          thickness: 1,
+                          color: Colors.grey[300],
+                        ),
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            _makePhoneCall("tel: ${driverPhone}");
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                          ),
+                          icon: Icon(Icons.phone),
+                          label: Text("Gọi tài xế"),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
