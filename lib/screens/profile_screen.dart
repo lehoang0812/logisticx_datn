@@ -200,7 +200,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           title: Text(
-            "Chỉnh sửa tài khoản",
+            "Thông tin cá nhân",
             style: TextStyle(
               color: Colors.black,
               fontWeight: FontWeight.bold,
@@ -217,7 +217,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Container(
                   padding: EdgeInsets.all(50),
                   decoration: BoxDecoration(
-                      color: Colors.lightBlue, shape: BoxShape.circle),
+                    color: Colors.lightBlue,
+                    shape: BoxShape.circle,
+                  ),
                   child: Icon(
                     Icons.person,
                     color: Colors.white,
@@ -240,7 +242,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Tên tài khoản: \n"
                       "${userModelCurrentInfo!.name!}",
                       style: TextStyle(
                         fontSize: 18,
@@ -265,7 +266,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Số điện thoại: \n"
                       "${userModelCurrentInfo!.phone!}",
                       style: TextStyle(
                         fontSize: 18,
@@ -290,7 +290,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Địa chỉ: \n"
                       "${userModelCurrentInfo!.address!}",
                       style: TextStyle(
                         fontSize: 18,

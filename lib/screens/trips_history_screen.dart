@@ -16,7 +16,7 @@ class _TripsHistoryScreenState extends State<TripsHistoryScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(
-          "Trips History",
+          "Lịch sử đơn hàng",
           style: TextStyle(
             color: Colors.black,
           ),
@@ -31,7 +31,7 @@ class _TripsHistoryScreenState extends State<TripsHistoryScreen> {
           },
         ),
         centerTitle: true,
-        elevation: 0,
+        elevation: 0.0,
       ),
       body: Padding(
         padding: EdgeInsets.all(20),

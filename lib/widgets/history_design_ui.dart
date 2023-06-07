@@ -30,7 +30,7 @@ class _HistoryDesignUIWidgetState extends State<HistoryDesignUIWidget> {
         Text(
           formatDateAndTime(widget.tripsHistoryModel!.time!),
           style: TextStyle(
-            fontSize: 15,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -86,7 +86,7 @@ class _HistoryDesignUIWidgetState extends State<HistoryDesignUIWidget> {
                                 width: 5,
                               ),
                               Text(
-                                "5.0",
+                                widget.tripsHistoryModel!.ratings!,
                                 style: TextStyle(
                                   color: Colors.grey,
                                 ),
@@ -110,7 +110,7 @@ class _HistoryDesignUIWidgetState extends State<HistoryDesignUIWidget> {
                         height: 8,
                       ),
                       Text(
-                        "${widget.tripsHistoryModel!.fareAmount!}",
+                        "${widget.tripsHistoryModel!.fareAmount!} VNĐ",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),

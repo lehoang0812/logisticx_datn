@@ -79,7 +79,7 @@ class AssistantMethods {
       DirectionDetailsInfo directionDetailsInfo) {
     double distanceTraveledFareAmountPerKilometer =
         (directionDetailsInfo.duration_value! / 1000) * 0.1;
-    double totalFareAmount = distanceTraveledFareAmountPerKilometer * 286;
+    double totalFareAmount = distanceTraveledFareAmountPerKilometer * 22000;
     return double.parse(totalFareAmount.toStringAsFixed(1));
   }
 
