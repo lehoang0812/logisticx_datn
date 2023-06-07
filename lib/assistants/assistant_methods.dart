@@ -7,6 +7,7 @@ import 'package:logisticx_datn/assistants/request_assistant.dart';
 import 'package:logisticx_datn/global/global.dart';
 import 'package:logisticx_datn/global/map_key.dart';
 import 'package:logisticx_datn/models/direction_details_info.dart';
+import 'package:logisticx_datn/models/trips_history_model.dart';
 import 'package:logisticx_datn/models/user_model.dart';
 import 'package:provider/provider.dart';
 
@@ -115,5 +116,57 @@ class AssistantMethods {
       headers: headerNoti,
       body: jsonEncode(officialNotiFormat),
     );
+  }
+
+  //retrieve the trips key for online user
+  //trip key = ride request key
+  static void readTripsKeysForOnlineUser(context) {
+    FirebaseDatabase.instance
+        .ref()
+        .child("All Ride Requests")
+        .orderByChild("userName")
+        .equalTo(userModelCurrentInfo!.name)
+        .once()
+        .then((snap) {
+      if (snap.snapshot.value != null) {
+        Map keysTripsId = snap.snapshot.value as Map;
+
+        //count total number of trips and share it with Provider
+        int overallTripsCounter = keysTripsId.length;
+        Provider.of<AppInfo>(context, listen: false)
+            .updateOverallTripsCounter(overallTripsCounter);
+
+        //share trips keys with Provider
+        List<String> tripsKeysList = [];
+        keysTripsId.forEach((key, value) {
+          tripsKeysList.add(key);
+        });
+        Provider.of<AppInfo>(context, listen: false)
+            .updateOverallTripsKeys(tripsKeysList);
+
+        //get trips keys data - read trips complete infor
+        readTripsHistoryInfo(context);
+      }
+    });
+  }
+
+  static void readTripsHistoryInfo(context) {
+    var tripsAllKeys =
+        Provider.of<AppInfo>(context, listen: false).historyTripsKeysList;
+    for (String eachKey in tripsAllKeys) {
+      FirebaseDatabase.instance
+          .ref()
+          .child("All Ride Requests")
+          .child(eachKey)
+          .once()
+          .then((snap) {
+        var eachTripHistory = TripsHistoryModel.fromSnapshot(snap.snapshot);
+        if ((snap.snapshot.value as Map)["status"] == "ended") {
+          //update or add each history to overallTrips History data list
+          Provider.of<AppInfo>(context, listen: false)
+              .updateOverallTripsHistoryInfo(eachTripHistory);
+        }
+      });
+    }
   }
 }
