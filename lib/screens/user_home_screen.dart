@@ -119,6 +119,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     userEmail = userModelCurrentInfo!.email!;
 
     initializeGeoFireListener();
+
+    AssistantMethods.readTripsKeysForOnlineUser(context);
   }
 
   initializeGeoFireListener() {
@@ -135,6 +137,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           switch (callBack) {
             //khi nao tai xe online/active
             case Geofire.onKeyEntered:
+              GeofireAssistant.activenearbyAvailableDriversList.clear();
               ActiveNearbyAvailableDrivers activeNearbyAvailableDrivers =
                   ActiveNearbyAvailableDrivers();
               activeNearbyAvailableDrivers.locationLatitude = map["latitude"];
