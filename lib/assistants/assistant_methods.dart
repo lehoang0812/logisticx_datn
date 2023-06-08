@@ -31,6 +31,7 @@ class AssistantMethods {
   static Future<String> searchAddressForGeographicCoOrdinates(
       Position position, context) async {
     String apiUrl =
+        // "https://nominatim.openstreetmap.org/ui/reverse.html?lat=${position.latitude}&${position.longitude}";
         "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=$mapKey";
     String humanReadableAddress = "";
 
@@ -38,6 +39,7 @@ class AssistantMethods {
 
     if (requestResponse != "Error Occured. Failed. No Response.") {
       humanReadableAddress = requestResponse["results"][0]["formatted_address"];
+      // humanReadableAddress = requestResponse["display_name"][0];
 
       Directions userPickUpAddress = Directions();
       userPickUpAddress.locationLatitude = position.latitude;

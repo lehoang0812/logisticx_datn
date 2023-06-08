@@ -913,7 +913,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                                 }
                               },
                               child: Text(
-                                "Xem giá chuyển hàng",
+                                "Xem bảng giá",
                                 style: TextStyle(color: Colors.white),
                               ),
                               style: ElevatedButton.styleFrom(

@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:logisticx_datn/global/global.dart';
 import 'package:logisticx_datn/screens/profile_screen.dart';
+import 'package:logisticx_datn/screens/trips_history_screen.dart';
 import 'package:logisticx_datn/splashScreen/splash_screen.dart';
 
 class DrawerScreen extends StatelessWidget {
@@ -63,11 +64,19 @@ class DrawerScreen extends StatelessWidget {
                     SizedBox(
                       height: 30,
                     ),
-                    Text(
-                      "Đơn hàng của bạn",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (c) => TripsHistoryScreen()));
+                      },
+                      child: Text(
+                        "Đơn hàng của bạn",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
                       ),
                     ),
                     SizedBox(
