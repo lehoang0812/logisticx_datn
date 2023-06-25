@@ -50,7 +50,7 @@ class _PayFareAmountDialogState extends State<PayFareAmountDialog> {
               height: 10,
             ),
             Text(
-              widget.fareAmount.toString() + "VNĐ",
+              widget.fareAmount.toString() + " VNĐ",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
@@ -89,7 +89,7 @@ class _PayFareAmountDialogState extends State<PayFareAmountDialog> {
                 child: Row(
                   children: [
                     Text(
-                      "Trả tiền",
+                      "Thanh toán ",
                       style: TextStyle(
                         fontSize: 20,
                         color: Colors.blue,
@@ -97,7 +97,7 @@ class _PayFareAmountDialogState extends State<PayFareAmountDialog> {
                       ),
                     ),
                     Text(
-                      widget.fareAmount.toString() + "VNĐ",
+                      widget.fareAmount.toString() + " VNĐ",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,

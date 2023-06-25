@@ -1,13 +1,15 @@
 import 'dart:async';
+import 'dart:typed_data';
 
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder2/geocoder2.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:location/location.dart' as loc;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:logisticx_datn/assistants/assistant_methods.dart';
 import 'package:logisticx_datn/assistants/geofire_assistant.dart';
@@ -44,7 +46,7 @@ class UserHomeScreen extends StatefulWidget {
 
 class _UserHomeScreenState extends State<UserHomeScreen> {
   LatLng? pickLocation;
-  loc.Location location = loc.Location();
+  // loc.Location location = loc.Location();
   String? _address;
 
   final Completer<GoogleMapController> _controllerGGMap =
@@ -89,7 +91,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 
   String selectedVehicleType = "";
 
-  String driverRideStatus = "Driver is coming";
+  String driverRideStatus = "Tài xế đang tới";
   StreamSubscription<DatabaseEvent>? tripRidesRequestInfoStreamSubscription;
 
   List<ActiveNearbyAvailableDrivers> onlineNearbyAvailableDriversList = [];
@@ -207,14 +209,32 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     );
   }
 
-  createActiveNearbyDriverIconMarker() {
+  // createActiveNearbyDriverIconMarker() {
+  //   if (activeNearbyIcon == null) {
+  //     ImageConfiguration imageConfiguration =
+  //         createLocalImageConfiguration(context, size: Size(2, 2));
+  //     BitmapDescriptor.fromAssetImage(imageConfiguration, "./assets/car.jpg")
+  //         .then((value) {
+  //       activeNearbyIcon = value;
+  //     });
+  //   }
+  // }
+
+  Future<void> createActiveNearbyDriverIconMarker() async {
     if (activeNearbyIcon == null) {
-      ImageConfiguration imageConfiguration =
-          createLocalImageConfiguration(context, size: Size(2, 2));
-      BitmapDescriptor.fromAssetImage(imageConfiguration, "./assets/car.png")
-          .then((value) {
-        activeNearbyIcon = value;
-      });
+      ByteData byteData = await rootBundle.load('./assets/car.png');
+      Uint8List imageData = byteData.buffer.asUint8List();
+
+      // Thay đổi kích thước hình ảnh và nén
+      Uint8List compressedImageData =
+          await FlutterImageCompress.compressWithList(
+        imageData,
+        minHeight: 2, // Chiều cao tối thiểu sau khi thu nhỏ
+        minWidth: 2, // Chiều rộng tối thiểu sau khi thu nhỏ
+        quality: 80, // Chất lượng hình ảnh sau khi nén (từ 0-100)
+      );
+
+      activeNearbyIcon = BitmapDescriptor.fromBytes(compressedImageData);
     }
   }
 
@@ -556,7 +576,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     print("Danh sách tài xế: " + driversList.toString());
 
     for (int i = 0; i < driversList.length; i++) {
-      if (driversList[i]["car_details"]["type"] == selectedVehicleType) {
+      if (driversList[i]["car_details"]["car_type"] == selectedVehicleType) {
         AssistantMethods.sendNotiToDriverNow(
             driversList[i]["token"], referenceRideRequest!.key!, context);
       }
@@ -786,11 +806,21 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                                           Provider.of<AppInfo>(context)
                                                       .userPickUpLocation !=
                                                   null
-                                              ? (Provider.of<AppInfo>(context)
-                                                          .userPickUpLocation!
-                                                          .locationName!)
-                                                      .substring(0, 24) +
-                                                  "..."
+                                              ? ((Provider.of<AppInfo>(context)
+                                                              .userPickUpLocation!
+                                                              .locationName!)
+                                                          .length >
+                                                      14
+                                                  ? (Provider.of<AppInfo>(
+                                                                  context)
+                                                              .userPickUpLocation!
+                                                              .locationName!)
+                                                          .substring(0, 14) +
+                                                      "..."
+                                                  : (Provider.of<AppInfo>(
+                                                          context)
+                                                      .userPickUpLocation!
+                                                      .locationName!))
                                               : "Chưa nhận đc địa chỉ",
                                           style: TextStyle(
                                               color: Colors.grey, fontSize: 14),
@@ -973,11 +1003,64 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                           Text(
                             Provider.of<AppInfo>(context).userPickUpLocation !=
                                     null
-                                ? (Provider.of<AppInfo>(context)
-                                            .userPickUpLocation!
-                                            .locationName!)
-                                        .substring(0, 24) +
-                                    "..."
+                                ? ((Provider.of<AppInfo>(context)
+                                                .userPickUpLocation!
+                                                .locationName!)
+                                            .length >
+                                        14
+                                    ? (Provider.of<AppInfo>(context)
+                                                .userPickUpLocation!
+                                                .locationName!)
+                                            .substring(0, 14) +
+                                        "..."
+                                    : (Provider.of<AppInfo>(context)
+                                        .userPickUpLocation!
+                                        .locationName!))
+                                : "Chưa nhận đc địa chỉ",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              color: Colors.black,
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                            child: Icon(
+                              Icons.star,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Text(
+                            Provider.of<AppInfo>(context).userDropOffLocation !=
+                                    null
+                                ? ((Provider.of<AppInfo>(context)
+                                                .userDropOffLocation!
+                                                .locationName!)
+                                            .length >
+                                        14
+                                    ? (Provider.of<AppInfo>(context)
+                                                .userDropOffLocation!
+                                                .locationName!)
+                                            .substring(0, 14) +
+                                        "..."
+                                    : (Provider.of<AppInfo>(context)
+                                        .userDropOffLocation!
+                                        .locationName!))
                                 : "Chưa nhận đc địa chỉ",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -999,185 +1082,195 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                     SizedBox(
                       height: 20,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedVehicleType = "Bike";
-                            });
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: selectedVehicleType == "Bike"
-                                  ? Colors.blue
-                                  : Colors.grey[100],
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.all(25.0),
-                              child: Column(
-                                children: [
-                                  Image.asset(
-                                    "./assets/ic_bike.png",
-                                    scale: 2,
-                                  ),
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                  Text(
-                                    "Xe máy",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: selectedVehicleType == "Bike"
-                                          ? Colors.white
-                                          : Colors.black,
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectedVehicleType = "Bike";
+                              });
+                            },
+                            child: Container(
+                              width: 100,
+                              decoration: BoxDecoration(
+                                color: selectedVehicleType == "Bike"
+                                    ? Colors.blue
+                                    : Colors.grey[100],
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(15.0),
+                                child: Column(
+                                  children: [
+                                    Image.asset(
+                                      "./assets/ic_bike.png",
+                                      scale: 20,
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 2,
-                                  ),
-                                  Text(
-                                    tripDirectionDetailsInfo != null
-                                        ? "${((AssistantMethods.calculateFareAmountFromOriginToDestination(tripDirectionDetailsInfo!) * 0.8) * 107).toStringAsFixed(1)} VNĐ"
-                                        : "null",
-                                    style: TextStyle(
-                                      color: Colors.grey,
+                                    SizedBox(
+                                      height: 8,
                                     ),
-                                  )
-                                ],
+                                    Text(
+                                      "Xe máy",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: selectedVehicleType == "Bike"
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Text(
+                                      tripDirectionDetailsInfo != null
+                                          ? "${((AssistantMethods.calculateFareAmountFromOriginToDestination(tripDirectionDetailsInfo!) * 0.8) * 10).toStringAsFixed(1)}\nVNĐ"
+                                          : "null",
+                                      style: TextStyle(
+                                        color: selectedVehicleType == "Bike"
+                                            ? Colors.white
+                                            : Colors.grey,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedVehicleType = "Car";
-                            });
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: selectedVehicleType == "Car"
-                                  ? Colors.blue
-                                  : Colors.grey[100],
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.all(25.0),
-                              child: Column(
-                                children: [
-                                  Image.asset(
-                                    "./assets/ic_car.png",
-                                    scale: 2,
-                                  ),
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                  Text(
-                                    "Ô tô",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: selectedVehicleType == "Car"
-                                          ? Colors.white
-                                          : Colors.black,
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectedVehicleType = "Car";
+                              });
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: selectedVehicleType == "Car"
+                                    ? Colors.blue
+                                    : Colors.grey[100],
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(15.0),
+                                child: Column(
+                                  children: [
+                                    Image.asset(
+                                      "./assets/ic_car.png",
+                                      scale: 20,
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 2,
-                                  ),
-                                  Text(
-                                    tripDirectionDetailsInfo != null
-                                        ? "${((AssistantMethods.calculateFareAmountFromOriginToDestination(tripDirectionDetailsInfo!) * 1.5) * 107).toStringAsFixed(1)} VNĐ"
-                                        : "null",
-                                    style: TextStyle(
-                                      color: Colors.grey,
+                                    SizedBox(
+                                      height: 8,
                                     ),
-                                  )
-                                ],
+                                    Text(
+                                      "Ô tô",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: selectedVehicleType == "Car"
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Text(
+                                      tripDirectionDetailsInfo != null
+                                          ? "${((AssistantMethods.calculateFareAmountFromOriginToDestination(tripDirectionDetailsInfo!) * 1.5) * 10).toStringAsFixed(1)}\nVNĐ"
+                                          : "null",
+                                      style: TextStyle(
+                                        color: selectedVehicleType == "Car"
+                                            ? Colors.white
+                                            : Colors.grey,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedVehicleType = "Truck";
-                            });
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: selectedVehicleType == "Truck"
-                                  ? Colors.blue
-                                  : Colors.grey[100],
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.all(25.0),
-                              child: Column(
-                                children: [
-                                  Image.asset(
-                                    "./assets/ic_truck.png",
-                                    scale: 2,
-                                  ),
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                  Text(
-                                    "Xe tải",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: selectedVehicleType == "Truck"
-                                          ? Colors.white
-                                          : Colors.black,
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectedVehicleType = "Truck";
+                              });
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: selectedVehicleType == "Truck"
+                                    ? Colors.blue
+                                    : Colors.grey[100],
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(20.0),
+                                child: Column(
+                                  children: [
+                                    Image.asset(
+                                      "./assets/ic_truck.png",
+                                      scale: 20,
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 2,
-                                  ),
-                                  Text(
-                                    tripDirectionDetailsInfo != null
-                                        ? "${((AssistantMethods.calculateFareAmountFromOriginToDestination(tripDirectionDetailsInfo!) * 3) * 107).toStringAsFixed(1)} VNĐ"
-                                        : "null",
-                                    style: TextStyle(
-                                      color: Colors.grey,
+                                    SizedBox(
+                                      height: 8,
                                     ),
-                                  )
-                                ],
+                                    Text(
+                                      "Xe tải",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: selectedVehicleType == "Truck"
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Text(
+                                      tripDirectionDetailsInfo != null
+                                          ? "${((AssistantMethods.calculateFareAmountFromOriginToDestination(tripDirectionDetailsInfo!) * 3) * 10).toStringAsFixed(1)}\nVNĐ"
+                                          : "null",
+                                      style: TextStyle(
+                                        color: selectedVehicleType == "Truck"
+                                            ? Colors.white
+                                            : Colors.grey,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 50,
                     ),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          if (selectedVehicleType != "") {
-                            saveRideRequestInfo(selectedVehicleType);
-                          } else {
-                            Fluttertoast.showToast(
-                                msg: "Vui lòng chọn phương tiện!");
-                          }
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Center(
-                            child: Text(
-                              "Tạo đơn mới",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                              ),
+                    GestureDetector(
+                      onTap: () {
+                        if (selectedVehicleType != "") {
+                          saveRideRequestInfo(selectedVehicleType);
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: "Vui lòng chọn phương tiện!");
+                        }
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "Tạo đơn mới",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
                             ),
                           ),
                         ),
@@ -1353,7 +1446,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                                   children: [
                                     Image.asset(
                                       "./assets/car.png",
-                                      scale: 3,
+                                      scale: 30,
                                     ),
                                     Text(
                                       driverCarDetails,
@@ -1391,26 +1484,6 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
               ),
             ),
           ),
-
-          // Positioned(
-          //     child: Container(
-          //   decoration: BoxDecoration(
-          //     border: Border.all(color: Colors.black),
-          //     color: Colors.white,
-          //   ),
-          //   padding: EdgeInsets.all(20),
-          //   child: Text(
-          //     Provider.of<AppInfo>(context).userPickUpLocation != null
-          //         ? (Provider.of<AppInfo>(context)
-          //                     .userPickUpLocation!
-          //                     .locationName!)
-          //                 .substring(0, 24) +
-          //             "..."
-          //         : "Chưa nhận đc địa chỉ",
-          //     overflow: TextOverflow.visible,
-          //     softWrap: true,
-          //   ),
-          // ))
         ]),
       ),
     );

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:logisticx_datn/global/global.dart';
 import 'package:logisticx_datn/screens/profile_screen.dart';
 import 'package:logisticx_datn/screens/trips_history_screen.dart';

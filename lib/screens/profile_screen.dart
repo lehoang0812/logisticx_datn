@@ -290,7 +290,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "${userModelCurrentInfo!.address!}",
+                      userModelCurrentInfo!.address!.length > 14
+                          ? "${userModelCurrentInfo!.address!.substring(0, 14)}..."
+                          : "${userModelCurrentInfo!.address!}",
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,

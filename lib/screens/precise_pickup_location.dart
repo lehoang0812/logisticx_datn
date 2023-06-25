@@ -133,10 +133,18 @@ class _PrecisePickupScreenState extends State<PrecisePickupScreen> {
               child: Text(
                 Provider.of<AppInfo>(context).userPickUpLocation != null
                     ? (Provider.of<AppInfo>(context)
-                                .userPickUpLocation!
-                                .locationName!)
-                            .substring(0, 24) +
-                        "..."
+                                    .userPickUpLocation!
+                                    .locationName!)
+                                .length >
+                            14
+                        ? (Provider.of<AppInfo>(context)
+                                    .userPickUpLocation!
+                                    .locationName!)
+                                .substring(0, 14) +
+                            "..."
+                        : (Provider.of<AppInfo>(context)
+                            .userPickUpLocation!
+                            .locationName!)
                     : "Chưa nhận đc địa chỉ",
                 overflow: TextOverflow.visible,
                 softWrap: true,

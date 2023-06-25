@@ -23,7 +23,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPassController = TextEditingController();
-  late String _selectedRole;
   bool _showPassword = true;
 
   final _formKey = GlobalKey<FormState>();
@@ -45,7 +44,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               "email": emailController.text.trim(),
               "address": addressController.text.trim(),
               "phone": phoneController.text.trim(),
-              "role": _selectedRole.trim(),
             };
             DatabaseReference userRef =
                 FirebaseDatabase.instance.ref().child("users");
@@ -86,7 +84,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     final _roleList = ["Admin", "User", "Driver"];
-    _selectedRole = _roleList[1];
     return Scaffold(
       body: Container(
         padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
@@ -359,29 +356,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   // onChanged: (text) => setState(() {
                   //   confirmPassController.text = text;
                   // }),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 40),
-                  child: DropdownButtonFormField<String>(
-                    value: _selectedRole,
-                    decoration: InputDecoration(
-                      labelText: 'Chọn vị trí của bạn',
-                    ),
-                    isExpanded: true,
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedRole = value as String;
-                      });
-                    },
-                    items: _roleList
-                        .map<DropdownMenuItem<String>>(
-                          (String value) => DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          ),
-                        )
-                        .toList(),
-                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 30, 0, 40),
